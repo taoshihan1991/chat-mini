@@ -1,0 +1,25 @@
+{
+  "pages": [
+    "pages/index/index"
+  ],
+  "window": {
+    "defaultTitle": "GO-FLY客服工具",
+    "enableWK": "YES",
+    "enableDSL": true
+  },
+    "tabBar": {
+    "textColor": "#333",
+    "selectedColor": "#49a9ee",
+    "backgroundColor": "#ffffff",
+    "items": [
+      {
+        "pagePath": "pages/index/index",
+        "name": "访客"
+      },
+      {
+        "pagePath": "pages/index/index",
+        "name": "设置"
+      }
+    ]
+  }
+}
