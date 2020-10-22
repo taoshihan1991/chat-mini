@@ -86,8 +86,29 @@ Page({
     var visitorId=e.target.dataset.uid;
     my.navigateTo({ url: '/pages/detail/detail?visitor_id='+visitorId })
   },
+  checkAuth(){
+    let _this=this;
+    my.request({
+        url: this.data.baseUrl+'/userinfo?token=sss',
+        method: 'GET',
+        success: function(res) {
+        },
+        complete: function(res) {
+          my.hideLoading();
+          var code=res.data.code;
+          if(code!=200){
+            my.alert({content: res.data.msg});
+            my.navigateTo({ url: '/pages/index/login' });
+          }else{
+            _this.onlineIntime();
+          }
+        }
+    });
+  },
   onLoad(){
     let _this=this;
+    this.checkAuth();
+
     var baseUrl=this.data.baseUrl;
       my.request({
         url: baseUrl+'/visitors_online',
@@ -105,7 +126,6 @@ Page({
           _this.setData({
             visitors: res.data.result.ws,
           });
-          _this.onlineIntime();
         }
     });
   }

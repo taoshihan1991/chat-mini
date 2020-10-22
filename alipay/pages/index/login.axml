@@ -1,0 +1,21 @@
+<view class="container">
+    <input-item data-field="username" 
+      placeholder="用户名" 
+      value="{{username}}"
+      onInput="onItemInput"
+      onClear="onClear">
+      用户名
+    </input-item>
+      <input-item 
+      data-field="password" 
+      password="{{true}}" 
+      value="{{password}}"
+      onInput="onItemInput"
+      placeholder="密码">密码
+      </input-item>
+<button onTap="login" 
+type="primary" 
+>
+登录
+ </button>
+ </view>
