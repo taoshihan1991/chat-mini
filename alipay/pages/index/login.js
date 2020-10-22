@@ -1,7 +1,7 @@
 Page({
   data: {
-    //baseUrl:"https://gofly.sopans.com",
-    baseUrl:"http://127.0.0.1:8081",
+    baseUrl:"https://gofly.sopans.com",
+    //baseUrl:"http://127.0.0.1:8081",
     username:"",
     password:""
   },

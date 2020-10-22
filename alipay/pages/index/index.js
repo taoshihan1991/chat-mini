@@ -1,9 +1,9 @@
 Page({
   data: {
     baseUrl:"https://gofly.sopans.com",
+    wsBaseUrl:"wss://gofly.sopans.com/ws_kefu",
     //baseUrl:"http://127.0.0.1:8081",
     //wsBaseUrl:"ws://127.0.0.1:8081/ws_kefu",
-    wsBaseUrl:"wss://gofly.sopans.com/ws_kefu",
     visitors:[],
     token:"",
   },
@@ -44,8 +44,12 @@ Page({
              _this.removeOfflineUser(redata.data);
               break;
           case "notice":
+        
           
               break;
+          case "message":
+            _this.recvMessage(redata.data);
+          break;
       }
       //console.log('收到服务器内容 ：' + res.data)
     });
@@ -104,6 +108,17 @@ Page({
             _this.onlineIntime();
           }
         }
+    });
+  },
+  recvMessage(msg){
+    var visitors=this.data.visitors;
+    for(let i=0;i<visitors.length;i++){
+        if(visitors[i].uid==msg.id){
+            visitors[i].last_message=msg.content;
+        }
+    }
+    this.setData({
+        visitors: visitors,
     });
   },
   onLoad(){

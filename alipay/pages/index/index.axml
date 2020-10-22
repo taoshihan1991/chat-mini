@@ -6,3 +6,12 @@
     {{item.name}}
   </list-item>
   </list>
+<page-result
+  a:if="{{ visitors.length == 0 }}"
+ type="network"
+ title="没有在线访客"
+ brief="世界上最遥远的距离莫过于此"
+ footer="{{footer}}"
+ onTapLeft="onTapLeft"
+ onTapRight="onTapRight"
+/>
