@@ -1,10 +1,11 @@
 Page({
   data: {
-    //baseUrl:"https://gofly.sopans.com",
-    baseUrl:"http://127.0.0.1:8081",
-    wsBaseUrl:"ws://127.0.0.1:8081/ws_kefu?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVfdGltZSI6MTYwMzI1OTk2Niwia2VmdV9pZCI6MSwibmFtZSI6ImtlZnUyIiwicm9sZV9pZCI6MSwidHlwZSI6ImtlZnUifQ.RRA69WaopRRL4rtxetXRh85nvDhYWFnKeOUlKCdLSNw",
-    //wsBaseUrl:"wss://gofly.sopans.com/ws_kefu?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVfdGltZSI6MTYwMzI1OTk2Niwia2VmdV9pZCI6MSwibmFtZSI6ImtlZnUyIiwicm9sZV9pZCI6MSwidHlwZSI6ImtlZnUifQ.RRA69WaopRRL4rtxetXRh85nvDhYWFnKeOUlKCdLSNw",
+    baseUrl:"https://gofly.sopans.com",
+    //baseUrl:"http://127.0.0.1:8081",
+    //wsBaseUrl:"ws://127.0.0.1:8081/ws_kefu",
+    wsBaseUrl:"wss://gofly.sopans.com/ws_kefu",
     messages:[],
+    token:"",
   },
   login(){
     my.alert({ title: 'You click reset' });
@@ -12,14 +13,24 @@ Page({
   //用户实时上下线
   onlineIntime(){
     let _this=this;
+    console.log(this.data.wsBaseUrl+"?token="+this.data.token);
     my.connectSocket({
-      url: this.data.wsBaseUrl,
+      url: this.data.wsBaseUrl+"?token="+this.data.token,
     });
     my.onSocketClose((res) => {
       my.alert({content: '连接已关闭！'});
     });
     my.onSocketOpen((res) => {
           console.log("WebSocket 连接已打开");
+            let _this=this;
+            let mes = {}
+            mes.type = "ping";
+            mes.data = "";
+            setInterval(function () {
+                  my.sendSocketMessage({
+                      data: JSON.stringify(mes),
+                  });
+            },5000)
     });
     my.onSocketMessage((res) => {
       var redata = JSON.parse(res.data);
@@ -42,6 +53,10 @@ Page({
   },
   onLoad(options){
     let _this=this;
+    let res = my.getStorageSync({ key: 'app' });
+    if(res.data){
+      this.setData({token:res.data.token});
+    }
     var baseUrl=this.data.baseUrl;
       my.request({
         url: baseUrl+'/2/messages?visitor_id='+options.visitor_id,

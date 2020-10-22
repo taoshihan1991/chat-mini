@@ -1,9 +1,9 @@
 Page({
   data: {
-    //baseUrl:"https://gofly.sopans.com",
-    baseUrl:"http://127.0.0.1:8081",
-    wsBaseUrl:"ws://127.0.0.1:8081/ws_kefu",
-    //wsBaseUrl:"wss://gofly.sopans.com/ws_kefu",
+    baseUrl:"https://gofly.sopans.com",
+    //baseUrl:"http://127.0.0.1:8081",
+    //wsBaseUrl:"ws://127.0.0.1:8081/ws_kefu",
+    wsBaseUrl:"wss://gofly.sopans.com/ws_kefu",
     visitors:[],
     token:"",
   },
