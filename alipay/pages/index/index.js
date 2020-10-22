@@ -81,6 +81,11 @@ Page({
         visitors: visitors,
       });
   },
+  //点击
+  chatVisitor(e){
+    var visitorId=e.target.dataset.uid;
+    my.navigateTo({ url: '/pages/detail/detail?visitor_id='+visitorId })
+  },
   onLoad(){
     let _this=this;
     var baseUrl=this.data.baseUrl;
@@ -94,6 +99,9 @@ Page({
         },
         complete: function(res) {
           my.hideLoading();
+          if(!res.data.result){
+            return;
+          }
           _this.setData({
             visitors: res.data.result.ws,
           });

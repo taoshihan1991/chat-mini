@@ -1,6 +1,7 @@
   <list>
     <list-item a:for="{{visitors}}" key="k" thumb="{{baseUrl+item.avator}}"
     onClick="chatVisitor"
+    data-uid="{{item.uid}}"
     upperSubtitle="{{item.last_message}}" >
     {{item.name}}
   </list-item>
