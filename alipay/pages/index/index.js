@@ -2,9 +2,10 @@ Page({
   data: {
     //baseUrl:"https://gofly.sopans.com",
     baseUrl:"http://127.0.0.1:8081",
-    wsBaseUrl:"ws://127.0.0.1:8081/ws_kefu?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVfdGltZSI6MTYwMzI1OTk2Niwia2VmdV9pZCI6MSwibmFtZSI6ImtlZnUyIiwicm9sZV9pZCI6MSwidHlwZSI6ImtlZnUifQ.RRA69WaopRRL4rtxetXRh85nvDhYWFnKeOUlKCdLSNw",
-    //wsBaseUrl:"wss://gofly.sopans.com/ws_kefu?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVfdGltZSI6MTYwMzI1OTk2Niwia2VmdV9pZCI6MSwibmFtZSI6ImtlZnUyIiwicm9sZV9pZCI6MSwidHlwZSI6ImtlZnUifQ.RRA69WaopRRL4rtxetXRh85nvDhYWFnKeOUlKCdLSNw",
+    wsBaseUrl:"ws://127.0.0.1:8081/ws_kefu",
+    //wsBaseUrl:"wss://gofly.sopans.com/ws_kefu",
     visitors:[],
+    token:"",
   },
   login(){
     my.alert({ title: 'You click reset' });
@@ -13,7 +14,7 @@ Page({
   onlineIntime(){
     let _this=this;
     my.connectSocket({
-      url: this.data.wsBaseUrl,
+      url: this.data.wsBaseUrl+"?token="+this.data.token,
     });
     my.onSocketClose((res) => {
       my.alert({content: '连接已关闭！'});
@@ -89,7 +90,7 @@ Page({
   checkAuth(){
     let _this=this;
     my.request({
-        url: this.data.baseUrl+'/userinfo?token=sss',
+        url: this.data.baseUrl+'/userinfo?token='+this.data.token,
         method: 'GET',
         success: function(res) {
         },
@@ -107,8 +108,13 @@ Page({
   },
   onLoad(){
     let _this=this;
-    this.checkAuth();
+    let res = my.getStorageSync({ key: 'app' });
+    if(res.data){
+      this.setData({token:res.data.token});
+    }
 
+    this.checkAuth();
+    
     var baseUrl=this.data.baseUrl;
       my.request({
         url: baseUrl+'/visitors_online',

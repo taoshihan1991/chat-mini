@@ -25,6 +25,14 @@ Page({
           if(code!=200){
             my.alert({content: res.data.msg});
           }else{
+            my.setStorageSync({
+              key: 'app',
+              data: {
+                token: res.data.result.token,
+                ref_token:  res.data.result.ref_token,
+              }
+            });
+            my.navigateTo({ url: '/pages/index/index' });
           }
         }
     });
