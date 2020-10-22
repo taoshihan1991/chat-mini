@@ -1,7 +1,7 @@
   <list>
     <list-item a:for="{{visitors}}" key="k" thumb="{{baseUrl+item.avator}}"
     onClick="chatVisitor"
-    upperSubtitle="新访客" >
+    upperSubtitle="{{item.last_message}}" >
     {{item.name}}
   </list-item>
   </list>

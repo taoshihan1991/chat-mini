@@ -40,7 +40,7 @@ Page({
               _this.addOnlineUser(redata.data);
               break;
           case "userOffline":
-            
+             _this.removeOfflineUser(redata.data);
               break;
           case "notice":
           
@@ -64,6 +64,18 @@ Page({
      console.log(visitors,retData);
       if(!flag){
           visitors.unshift(retData);
+      }
+      this.setData({
+        visitors: visitors,
+      });
+  },
+    //处理当前在线用户列表
+  removeOfflineUser:function (retData) {
+    var visitors=this.data.visitors;
+      for(let i=0;i<visitors.length;i++){
+          if(visitors[i].uid==retData.uid){
+              visitors.splice(i,1);
+          }
       }
       this.setData({
         visitors: visitors,
