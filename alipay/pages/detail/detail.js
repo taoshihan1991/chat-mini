@@ -1,9 +1,9 @@
 Page({
   data: {
     baseUrl:"https://gofly.sopans.com",
-    //baseUrl:"http://127.0.0.1:8081",
-    //wsBaseUrl:"ws://127.0.0.1:8081/ws_kefu",
     wsBaseUrl:"wss://gofly.sopans.com/ws_kefu",
+    // baseUrl:"http://127.0.0.1:8081",
+    // wsBaseUrl:"ws://127.0.0.1:8081/ws_kefu",
     messages:[],
     token:"",
   },
@@ -13,12 +13,13 @@ Page({
   //用户实时上下线
   onlineIntime(){
     let _this=this;
+    var timer=null;
     console.log(this.data.wsBaseUrl+"?token="+this.data.token);
     my.connectSocket({
       url: this.data.wsBaseUrl+"?token="+this.data.token,
     });
     my.onSocketClose((res) => {
-      my.alert({content: '连接已关闭！'});
+      console.log("WebSocket 连接断开");
     });
     my.onSocketOpen((res) => {
           console.log("WebSocket 连接已打开");
@@ -26,7 +27,7 @@ Page({
             let mes = {}
             mes.type = "ping";
             mes.data = "";
-            setInterval(function () {
+            timer=setInterval(function () {
                   my.sendSocketMessage({
                       data: JSON.stringify(mes),
                   });
@@ -36,7 +37,8 @@ Page({
       var redata = JSON.parse(res.data);
       switch (redata.type){
           case "message":
-              break;
+            _this.recvMessage(redata.data);
+          break;
           case "notice":
               break;
       }
@@ -45,11 +47,15 @@ Page({
 
 
   },
-
-
-  //点击
-  chatVisitor(){
-    
+  recvMessage(msg){
+    var _this=this;
+    var messages=this.data.messages;
+    messages.push(msg);
+    this.setData({
+        messages: messages,
+    },function(){
+        _this.pageScrollToBottom();
+    });
   },
   onLoad(options){
     let _this=this;
@@ -70,9 +76,23 @@ Page({
           my.hideLoading();
           _this.setData({
             messages: res.data.result,
+          },function(){
+            _this.pageScrollToBottom();
+
           });
           _this.onlineIntime();
         }
     });
-  }
+  },
+   pageScrollToBottom: function () {
+     console.log(11111);
+    my.createSelectorQuery().select('#chatDetail').boundingClientRect().exec((rect)=>{
+      console.log(rect);;
+      // 使页面滚动到底部
+      my.pageScrollTo({
+        scrollTop: rect[0].bottom
+      })
+    });
+    console.log(222);
+ },
 });

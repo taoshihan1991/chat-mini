@@ -1,4 +1,5 @@
-  <list>
+<view id="chatDetail">
+  <list >
     <list-item a:for="{{messages}}" key="k" thumb="{{baseUrl+item.avator}}"
     upperSubtitle="{{item.content}}" 
     lowerSubtitle="{{item.time}}"
@@ -6,3 +7,4 @@
     {{item.name}}
   </list-item>
   </list>
+  </view>

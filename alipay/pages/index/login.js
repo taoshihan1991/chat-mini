@@ -3,7 +3,8 @@ Page({
     baseUrl:"https://gofly.sopans.com",
     //baseUrl:"http://127.0.0.1:8081",
     username:"",
-    password:""
+    password:"",
+    timer:null
   },
   login(e){
     let _this=this;

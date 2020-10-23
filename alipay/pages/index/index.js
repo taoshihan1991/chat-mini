@@ -2,22 +2,26 @@ Page({
   data: {
     baseUrl:"https://gofly.sopans.com",
     wsBaseUrl:"wss://gofly.sopans.com/ws_kefu",
-    //baseUrl:"http://127.0.0.1:8081",
-    //wsBaseUrl:"ws://127.0.0.1:8081/ws_kefu",
+    // baseUrl:"http://127.0.0.1:8081",
+    // wsBaseUrl:"ws://127.0.0.1:8081/ws_kefu",
     visitors:[],
     token:"",
+    timer:null,
+    wsOpen:false,
   },
   login(){
     my.alert({ title: 'You click reset' });
   },
   //用户实时上下线
   onlineIntime(){
-    let _this=this;
+    var _this=this;
+    var timer=null;
     my.connectSocket({
       url: this.data.wsBaseUrl+"?token="+this.data.token,
     });
     my.onSocketClose((res) => {
-      my.alert({content: '连接已关闭！'});
+      clearInterval(timer);
+      console.log("WebSocket 连接断开");
     });
     my.onSocketOpen((res) => {
           console.log("WebSocket 连接已打开");
@@ -25,7 +29,7 @@ Page({
             let mes = {}
             mes.type = "ping";
             mes.data = "";
-            setInterval(function () {
+            timer=setInterval(function () {
                   my.sendSocketMessage({
                       data: JSON.stringify(mes),
                   });
@@ -44,14 +48,11 @@ Page({
              _this.removeOfflineUser(redata.data);
               break;
           case "notice":
-        
-          
               break;
           case "message":
             _this.recvMessage(redata.data);
           break;
       }
-      //console.log('收到服务器内容 ：' + res.data)
     });
 
 
@@ -66,7 +67,6 @@ Page({
               flag=true;
           }
       }
-     console.log(visitors,retData);
       if(!flag){
           visitors.unshift(retData);
       }
@@ -92,7 +92,7 @@ Page({
     my.navigateTo({ url: '/pages/detail/detail?visitor_id='+visitorId })
   },
   checkAuth(){
-    let _this=this;
+    var _this=this;
     my.request({
         url: this.data.baseUrl+'/userinfo?token='+this.data.token,
         method: 'GET',
@@ -105,7 +105,9 @@ Page({
             my.alert({content: res.data.msg});
             my.navigateTo({ url: '/pages/index/login' });
           }else{
-            _this.onlineIntime();
+                
+                  _this.onlineIntime();;
+                
           }
         }
     });
@@ -121,15 +123,8 @@ Page({
         visitors: visitors,
     });
   },
-  onLoad(){
+  getOnlineUser(){
     let _this=this;
-    let res = my.getStorageSync({ key: 'app' });
-    if(res.data){
-      this.setData({token:res.data.token});
-    }
-
-    this.checkAuth();
-    
     var baseUrl=this.data.baseUrl;
       my.request({
         url: baseUrl+'/visitors_online',
@@ -149,5 +144,18 @@ Page({
           });
         }
     });
-  }
+  },
+  onLoad(){
+    let _this=this;
+    let res = my.getStorageSync({ key: 'app' });
+    if(res.data){
+      this.setData({token:res.data.token});
+    }
+
+  },
+  // 页面显示
+  onShow() {
+    this.checkAuth();;
+    this.getOnlineUser();
+  },
 });
