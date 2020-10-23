@@ -85,13 +85,17 @@ Page({
     });
   },
    pageScrollToBottom: function () {
-     console.log(11111);
-    my.createSelectorQuery().select('#chatDetail').boundingClientRect().exec((rect)=>{
-      console.log(rect);;
-      // 使页面滚动到底部
+     var _this=this;
+    my.createSelectorQuery().select('.chatBox').boundingClientRect().exec((rect)=>{
+      console.log(rect);
+      var height=rect[0].height;
+      // // 使页面滚动到底部
       my.pageScrollTo({
-        scrollTop: rect[0].bottom
+        scrollTop: height
       })
+        // _this.setData({
+        //   scrollTop:height
+        // });
     });
     console.log(222);
  },

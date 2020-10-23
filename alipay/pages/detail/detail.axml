@@ -1,10 +1,17 @@
-<view id="chatDetail">
-  <list >
-    <list-item a:for="{{messages}}" key="k" thumb="{{baseUrl+item.avator}}"
-    upperSubtitle="{{item.content}}" 
-    lowerSubtitle="{{item.time}}"
-    >
-    {{item.name}}
-  </list-item>
-  </list>
-  </view>
+<list class="chatBox">
+  <list-item a:for="{{messages}}" key="k" thumb="{{baseUrl+item.avator}}"
+  upperSubtitle="{{item.content}}" 
+  lowerSubtitle="{{item.time}}"
+  >
+  {{item.name}}
+</list-item>
+</list>
+  <multi-liner class="textArea" data-field="area" 
+    placeholder="回复内容" 
+    type="text" 
+    value="{{value}}" 
+    onInput="onInput" 
+    last="{{true}}" 
+    auto-height="{{true}}" 
+    controlled="{{controlled}}"/>
+  <view id="bottom"></view>

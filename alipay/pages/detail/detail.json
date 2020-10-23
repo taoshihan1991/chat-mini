@@ -2,6 +2,7 @@
   "defaultTitle": "GO-FLY在线访客",
   "usingComponents":{
     "list": "mini-ali-ui/es/list/index",
-    "list-item": "mini-ali-ui/es/list/list-item/index"
+    "list-item": "mini-ali-ui/es/list/list-item/index",
+    "multi-liner": "mini-ali-ui/es/multi-liner/index"
   }
 }
