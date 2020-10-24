@@ -9,9 +9,6 @@ Page({
     timer:null,
     wsOpen:false,
   },
-  login(){
-    my.alert({ title: 'You click reset' });
-  },
   //用户实时上下线
   onlineIntime(){
     var _this=this;
@@ -101,11 +98,10 @@ Page({
           my.hideLoading();
           var code=res.data.code;
           if(code!=200){
-            my.alert({content: res.data.msg});
+            //my.alert({content: res.data.msg});
             my.navigateTo({ url: '/pages/index/login' });
           }else{
-                
-                  _this.onlineIntime();;
+             _this.onlineIntime();;
                 
           }
         }

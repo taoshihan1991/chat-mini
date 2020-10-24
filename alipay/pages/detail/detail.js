@@ -86,9 +86,51 @@ Page({
         }
     });
   },
-  sendMessage(){
-    let _this=this;
-    my.request({
+  //
+  filterTxt(){
+    var _this=this;
+      my.request({
+					//获取access_token
+					url: 'https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=yifBhtwr1lKvp5GMGLrQLxna&client_secret=2gedlLVa28Kfq9ADjVSDEihZ6VrNBK8S',
+					method: 'GET',
+					data: {},
+					success: res => {
+					//文本内容审核
+						my.request({
+							url:'https://aip.baidubce.com/rest/2.0/solution/v1/text_censor/v2/user_defined?access_token='+res.data.access_token,
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/x-www-form-urlencoded'
+							},
+							data:{
+								'text':_this.data.area
+							},
+							success: res => {
+								console.log(res)
+								if(res.data.conclusionType==1){
+                   //状态为1 内容合规 没有敏感词 则提交
+                   _this.sendContentAPi();
+								}else{
+									my.alert({
+										content: '内容含有敏感信息'
+									});
+								}
+							},
+							fail: () => {
+								console.log(Error)
+							},
+							complete: () => {}
+						});
+					},
+					fail: () => {
+						console.log(Error)
+					},
+					complete: () => {}
+				});
+  },
+  sendContentAPi(){
+    var _this=this;
+        my.request({
         url: this.data.baseUrl+'/2/message',
         method: 'POST',
         headers: {
@@ -127,7 +169,10 @@ Page({
           }
         }
     });
-      console.log(this.data.area);
+  },
+  sendMessage(){
+    let _this=this;
+    this.filterTxt();
   },
   onItemInput(e) {
     console.log(e.detail.value);
