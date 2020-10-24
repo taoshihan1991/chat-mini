@@ -8,6 +8,10 @@ Page({
     token:"",
     visitor_id:"",
     kefu_name:"",
+    isDisabled:false,
+    area:"",
+    showArea:false,
+    scrollSize:2,
   },
   //用户实时上下线
   onlineIntime(){
@@ -56,7 +60,10 @@ Page({
     this.setData({
         messages: messages,
     },function(){
-        _this.pageScrollToBottom();
+      console.log(messages.length);
+        if(messages.length>_this.data.scrollSize){
+          _this.pageScrollToBottom();
+        }
     });
   },
   onLoad(options){
@@ -79,12 +86,17 @@ Page({
           _this.setData({
             messages: res.data.result,
           },function(){
-            _this.pageScrollToBottom();
+            if(res.data.result.length>_this.data.scrollSize){
+              _this.pageScrollToBottom();
+            }
 
           });
           _this.onlineIntime();
         }
     });
+  },
+  onShow(){
+    this.showArea();
   },
   //
   filterTxt(){
@@ -106,6 +118,9 @@ Page({
 								'text':_this.data.area
 							},
 							success: res => {
+                _this.setData({
+                  isDisabled: false,
+                });
 								console.log(res)
 								if(res.data.conclusionType==1){
                    //状态为1 内容合规 没有敏感词 则提交
@@ -145,6 +160,9 @@ Page({
         success: function(res) {
         },
         complete: function(res) {
+          _this.setData({
+            isDisabled: false,
+          });
           my.hideLoading();
           var code=res.data.code;
           if(code!=200){
@@ -160,11 +178,14 @@ Page({
                 //   content:msg.content
                 // }
                 messages.push(msg);
+
                 _this.setData({
                     area:"",
                     messages: messages,
                 },function(){
+                  if(messages.length>_this.data.scrollSize){
                     _this.pageScrollToBottom();
+                  }
                 });
           }
         }
@@ -172,6 +193,19 @@ Page({
   },
   sendMessage(){
     let _this=this;
+    this.setData({
+      isDisabled: true,
+    });
+    var str=_this.data.area;
+    if(str.replace(/(^s*)|(s*$)/g, "")==""){
+      my.alert({
+        content: '请输入内容'
+      });
+      this.setData({
+        isDisabled: false,
+      });
+      return;
+    }
     this.filterTxt();
   },
   onItemInput(e) {
@@ -191,6 +225,21 @@ Page({
         scrollTop: height
       })
     });
-    console.log(222);
  },
+ showArea(){
+       var _this=this;
+        my.request({
+        url: this.data.baseUrl+'/config?key=MiniAppAudit',
+        //url: 'http://127.0.0.1:8081/config?key=MiniAppAudit',
+        success: function(res) {
+        },
+        complete: function(res) {
+          if(res.data.result!="yes"){
+            _this.setData({
+              showArea: true,
+            });
+          }
+        }
+    });
+ }
 });

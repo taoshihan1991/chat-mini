@@ -1,23 +1,24 @@
-<list class="chatBox">
-  <list-item a:for="{{messages}}" key="k" thumb="{{baseUrl+item.avator}}"
-  upperSubtitle="{{item.content}}" 
-  lowerSubtitle="{{item.time}}"
-  >
-  {{item.name}}
-</list-item>
-</list>
-
-  <view class="textArea">
-
+  <view class="chatBox">
+  <coupon a:for="{{messages}}" key="k" title="{{item.name}}" 
+    subtitle="{{item.time}}"
+    moreBtn="查看更多"
+    moreHide="{{false}}"
+    onCouponClick="onCouponClick" 
+    thumb="{{baseUrl+item.avator}}">
+    <view slot="detail" class="coupon_rule">
+      <text>{{item.content}}</text>
+    </view>
+  </coupon>
+</view>
+  <view class="textArea {{showArea? 'show':''}}">
     <multi-liner  data-field="area" 
     placeholder="回复内容" 
     type="text" 
     value="{{area}}" 
     onInput="onItemInput" 
-    last="{{true}}" 
-    auto-height="{{true}}" 
-    controlled="{{controlled}}"/>
+    auto-height="{{true}}" />
       <button onTap="sendMessage" 
+      disabled="{{isDisabled}}"
       type="primary" >发送</button>
   </view>
 
