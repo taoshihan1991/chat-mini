@@ -48,6 +48,9 @@ Page({
   },
   recvMessage(msg){
     var _this=this;
+    if(msg.id!=this.data.visitor_id){
+        return;
+    }
     var messages=this.data.messages;
     messages.push(msg);
     this.setData({
