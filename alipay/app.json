@@ -5,7 +5,7 @@
     "pages/detail/detail"
   ],
   "window": {
-    "defaultTitle": "GO-FLY访客工具",
+    "defaultTitle": "GO-FLY客服助手",
     "enableWK": "YES",
     "enableDSL": true
   },
