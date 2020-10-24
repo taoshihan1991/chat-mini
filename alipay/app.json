@@ -16,11 +16,11 @@
     "items": [
       {
         "pagePath": "pages/index/index",
-        "name": "访客"
+        "name": "在线"
       },
       {
-        "pagePath": "pages/index/index",
-        "name": "设置"
+        "pagePath": "pages/index/login",
+        "name": "登录"
       }
     ]
   }

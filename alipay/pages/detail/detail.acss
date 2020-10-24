@@ -1,5 +1,5 @@
 .chatBox{
-  margin-bottom: 90px;
+  margin-bottom: 120px;
 }
 .textArea{
   position: fixed;

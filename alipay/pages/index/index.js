@@ -24,7 +24,7 @@ Page({
       console.log("WebSocket 连接断开");
     });
     my.onSocketOpen((res) => {
-          console.log("WebSocket 连接已打开");
+          console.log("WebSocket 连接已打开");;
             let _this=this;
             let mes = {}
             mes.type = "ping";
@@ -60,8 +60,7 @@ Page({
   addOnlineUser(retData){
       var visitors=this.data.visitors;
       var flag=false;
-      retData.last_message="新访客";
-      retData.name=retData.username;
+
       for(let i=0;i<visitors.length;i++){
           if(visitors[i].uid==retData.uid){
               flag=true;
@@ -127,7 +126,8 @@ Page({
     let _this=this;
     var baseUrl=this.data.baseUrl;
       my.request({
-        url: baseUrl+'/visitors_online',
+        url: baseUrl+'/visitors_kefu_online',
+        headers: {'token': this.data.token},
         method: 'GET',
         success: function(res) {
         },
@@ -140,7 +140,7 @@ Page({
             return;
           }
           _this.setData({
-            visitors: res.data.result.ws,
+            visitors: res.data.result,
           });
         }
     });

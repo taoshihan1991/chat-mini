@@ -2,8 +2,8 @@ Page({
   data: {
     baseUrl:"https://gofly.sopans.com",
     //baseUrl:"http://127.0.0.1:8081",
-    username:"",
-    password:"",
+    username:"kefu2",
+    password:"123",
     timer:null
   },
   login(e){
@@ -29,6 +29,7 @@ Page({
             my.setStorageSync({
               key: 'app',
               data: {
+                kefu_name:_this.data.username,
                 token: res.data.result.token,
                 ref_token:  res.data.result.ref_token,
               }

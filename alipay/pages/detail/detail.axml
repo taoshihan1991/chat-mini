@@ -6,12 +6,18 @@
   {{item.name}}
 </list-item>
 </list>
-  <multi-liner class="textArea" data-field="area" 
+
+  <view class="textArea">
+
+    <multi-liner  data-field="area" 
     placeholder="回复内容" 
     type="text" 
-    value="{{value}}" 
-    onInput="onInput" 
+    value="{{area}}" 
+    onInput="onItemInput" 
     last="{{true}}" 
     auto-height="{{true}}" 
     controlled="{{controlled}}"/>
-  <view id="bottom"></view>
+      <button onTap="sendMessage" 
+      type="primary" >发送</button>
+  </view>
+
