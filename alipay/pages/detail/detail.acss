@@ -1,10 +1,9 @@
 page{
   padding-top: 2px;
   background: #ccc;
+  padding-bottom: 150px;
 }
-.chatBox{
-  margin-bottom: 150px;
-}
+
 .textArea{
   position: fixed;
   width: 100%;
