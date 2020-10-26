@@ -22,7 +22,6 @@ Page({
         success: function(res) {
         },
         complete: function(res) {
-          wx.hideLoading();
           var code=res.data.code;
           if(code!=200){
             _this.setData({

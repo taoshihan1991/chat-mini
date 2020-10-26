@@ -1,4 +1,5 @@
 <view class="page chatBox">
+  <mp-toptips msg="{{error}}" type="error" show="{{error}}"></mp-toptips>
 <mp-cells>
   <mp-cell  wx:for="{{messages}}" wx:key="k" data-uid="{{item.uid}}" bindtap="chatVisitor">
     <view slot="title">
@@ -10,3 +11,7 @@
             </mp-cell>
         </mp-cells>
 </view>
+<view class="sendArea">
+                    <textarea  bindinput="onItemInput" data-field="area" class="weui-textarea" placeholder="请输入文本"  value="{{area}}"/>
+            <button disabled="{{isDisabled}}" class="weui-btn" type="primary" bindtap="sendMessage">发送</button>
+        </view> 

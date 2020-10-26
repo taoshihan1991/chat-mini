@@ -147,7 +147,6 @@ Page({
           var appData=JSON.parse(res.data);
           _this.setData({token:appData.token});
           _this.checkAuth();;
-          _this.getOnlineUser();
         }
       },
       fail(){
@@ -158,6 +157,19 @@ Page({
   },
   // 页面显示
   onShow() {
-
+    let _this=this;
+    wx.getStorage({
+      key: 'app',
+      success (res) {
+        if(res.data){
+          var appData=JSON.parse(res.data);
+          _this.setData({token:appData.token});
+          _this.getOnlineUser();
+        }
+      },
+      fail(){
+        _this.checkAuth();;
+      }
+      })
   },
 });

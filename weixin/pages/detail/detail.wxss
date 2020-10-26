@@ -1,1 +1,14 @@
-/* pages/detail.wxss */
+.chatBox{
+  margin-bottom: 130px;
+}
+.sendArea{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+  background-color: #fff;
+}
+.sendArea textarea{
+  height:5.5em;
+}
