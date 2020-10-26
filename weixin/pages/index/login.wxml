@@ -1,0 +1,15 @@
+
+<view class="page" xmlns:wx="http://www.w3.org/1999/xhtml">
+  <mp-toptips msg="{{error}}" type="error" show="{{error}}"></mp-toptips>
+  <view class="page__bd">
+  <mp-cells>
+    <mp-cell prop="" title="" ext-class="">
+    <input bindinput="onItemInput" data-field="username" class="weui-input" placeholder="请输入用户名" value="{{username}}"/>
+    </mp-cell>
+    <mp-cell prop="" title="" ext-class="">
+        <input type="password" bindinput="onItemInput" data-field="password" class="weui-input" placeholder="请输入密码" value="{{password}}"/>
+    </mp-cell>
+      </mp-cells>
+      <button class="weui-btn" type="primary" bindtap="login">登录</button>
+    </view>
+</view>

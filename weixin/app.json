@@ -1,8 +1,9 @@
-
 {
   "pages": [
-  "pages/index/index"
-],
+    "pages/index/index",
+    "pages/index/login",
+    "pages/detail/detail"
+  ],
   "useExtendedLib": {
     "weui": true
   }

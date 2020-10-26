@@ -1,0 +1,12 @@
+<view class="page chatBox">
+<mp-cells>
+  <mp-cell  wx:for="{{messages}}" wx:key="k" data-uid="{{item.uid}}" bindtap="chatVisitor">
+    <view slot="title">
+                    <image src="{{baseUrl+item.avator}}"  style="width:50px; height: 50px; display: block;margin-right: 5px;border-radius:50%;"/>
+                </view>
+                <view>{{item.name}}</view>
+                <view style="font-size: 13px;color: #888888;">{{item.content}}</view>
+                <view style="font-size: 10px;color: #888888;">{{item.time}}</view>
+            </mp-cell>
+        </mp-cells>
+</view>
