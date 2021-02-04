@@ -1,52 +1,54 @@
 <template>
 	<view class="content">
-		<image class="logo" src="/static/logo.png"></image>
-		<view class="text-area">
-			<text class="title">{{title}}</text>
-		</view>
+		<uni-list>
+		    <uni-list-item title="列表左侧带略缩图" note="列表描述信息" thumb="https://img-cdn-qiniu.dcloud.net.cn/new-page/uni.png"
+		     thumb-size="lg" rightText="右侧文字"></uni-list-item>
+		</uni-list>
 	</view>
+
 </template>
 
 <script>
 	export default {
 		data() {
 			return {
-				title: 'Hello'
+				title: 'Hello',
+				baseUrl:"https://gofly.sopans.com",
+				wsBaseUrl:"wss://gofly.sopans.com/ws_kefu",
+				// baseUrl:"http://127.0.0.1:8081",
+				// wsBaseUrl:"ws://127.0.0.1:8081/ws_kefu",
+				visitors:[],
+				token:"",
+				timer:null,
+				wsOpen:false,
 			}
 		},
+		// 页面显示
+		onShow() {
+			this.checkAuth();
+			this.getOnlineUser();
+		},
 		onLoad() {
-
 		},
 		methods: {
-
+			getOnlineUser(){
+			},
+			checkAuth(){
+				var _this=this;
+				uni.request({
+					url: _this.baseUrl+'/userinfo?token='+_this.token,
+					method: 'GET',
+					success: function(res) {
+					},
+					complete: function(res) {
+				
+					}
+				});
+			},
 		}
 	}
 </script>
 
 <style>
-	.content {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-	}
 
-	.logo {
-		height: 200rpx;
-		width: 200rpx;
-		margin-top: 200rpx;
-		margin-left: auto;
-		margin-right: auto;
-		margin-bottom: 50rpx;
-	}
-
-	.text-area {
-		display: flex;
-		justify-content: center;
-	}
-
-	.title {
-		font-size: 36rpx;
-		color: #8f8f94;
-	}
 </style>
