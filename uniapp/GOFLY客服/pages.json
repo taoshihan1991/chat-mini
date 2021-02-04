@@ -6,7 +6,16 @@
 				"navigationBarTitleText": "GOFLY Live Chat"
 			}
 		}
-	],
+	    ,{
+            "path" : "pages/index/login",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "GOFLY Live Chat",
