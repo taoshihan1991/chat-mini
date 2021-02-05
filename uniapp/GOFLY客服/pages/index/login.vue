@@ -1,57 +1,61 @@
 <template>
-    <view class="loginBox">
-        <uni-forms :value="formData" ref="form">
-                <uni-easyinput class="loginInput" type="text" v-model="formData.username" placeholder="请输入用户名" />
-			    <uni-easyinput class="loginInput" type="password" v-model="formData.password" placeholder="请输入密码" />
-            <button class="loginInput" @click="submitForm" type="primary">登录</button>
-        </uni-forms>
-    </view>
+	<view class="loginBox">
+		<uni-forms :value="formData" ref="form">
+			<uni-easyinput class="loginInput" type="text" v-model="formData.username" placeholder="请输入用户名" />
+			<uni-easyinput class="loginInput" type="password" v-model="formData.password" placeholder="请输入密码" />
+			<button class="loginInput" @click="submitForm" type="primary">登录</button>
+		</uni-forms>
+	</view>
 </template>
 
 <script>
 	export default {
 		data() {
 			return {
-				formData:{
-					username:'',
-					password:''
+				formData: {
+					username: '',
+					password: ''
 				},
-				baseUrl:"https://gofly.sopans.com",
+				baseUrl: "https://gofly.sopans.com",
 				//baseUrl:"http://127.0.0.1:8081",
-				timer:null
+				timer: null
 			}
 		},
 		methods: {
 			submitForm(form) {
-				uni.showLoading({title: '验证中...'});
-				this.$refs.form.submit().then((res)=>{
-					let _this=this;
+				uni.showLoading({
+					title: '验证中...'
+				});
+				this.$refs.form.submit().then((res) => {
+					let _this = this;
 					uni.request({
-						url: _this.baseUrl+'/check',
+						url: _this.baseUrl + '/check',
 						method: 'POST',
 						header: {
-						  'Content-Type': 'application/x-www-form-urlencoded'
+							'Content-Type': 'application/x-www-form-urlencoded'
 						},
-						data:{
-						  username:this.formData.username,
-						  password:this.formData.password
+						data: {
+							username: this.formData.username,
+							password: this.formData.password
 						},
-						success: function(res) {
-						},
+						success: function(res) {},
 						complete: function(res) {
-						  uni.hideLoading();
-						  var code=res.data.code;
-						  if(code!=200){
-							uni.showModal({content: res.data.msg});
-						  }else{
-							uni.setStorageSync("app",{
-								kefu_name:_this.formData.username,
-								token: res.data.result.token,
-								ref_token:  res.data.result.ref_token,
-							  }
-							);
-							uni.navigateTo({ url: '/pages/index/index' });
-						  }
+							uni.hideLoading();
+							var code = res.data.code;
+							if (code != 200) {
+								uni.showModal({
+									content: res.data.msg
+								});
+							} else {
+								uni.setStorageSync("app", {
+									kefu_name: _this.formData.username,
+									token: res.data.result.token,
+									ref_token: res.data.result.ref_token,
+								});
+								uni.navigateTo({
+									url: '/pages/index/index'
+								});
+							}
 						}
 					});
 				})
@@ -61,10 +65,11 @@
 </script>
 
 <style>
-.loginBox{
-	padding: 20px;
-}
-.loginInput{
-	margin-bottom: 10px;
-}
+	.loginBox {
+		padding: 20px;
+	}
+
+	.loginInput {
+		margin-bottom: 10px;
+	}
 </style>

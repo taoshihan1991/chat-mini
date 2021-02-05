@@ -18,7 +18,7 @@
             "path" : "pages/index/detail",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
+                "navigationBarTitleText": "GOFLY Live Chat",
                 "enablePullDownRefresh": false
             }
         }
