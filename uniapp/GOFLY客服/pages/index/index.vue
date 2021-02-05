@@ -1,8 +1,8 @@
 <template>
 	<view class="content">
 		<uni-list>
-		    <uni-list-item v-for="item in visitors" :title="item.username" :note="item.last_message" :thumb="baseUrl+item.avator"
-		     thumb-size="lg" ></uni-list-item>
+		    <uni-list-item v-for="item in visitors" key="item.uid" :title="item.username" :note="item.last_message" :thumb="baseUrl+item.avator"
+		     thumb-size="lg" clickable @click="chatVisitor($event,item.uid)" ></uni-list-item>
 		</uni-list>
 	</view>
 
@@ -18,13 +18,19 @@
 				// baseUrl:"http://127.0.0.1:8081",
 				// wsBaseUrl:"ws://127.0.0.1:8081/ws_kefu",
 				visitors:[],
-				token:".eyJjcmVhdGVfdGltZSI6MTYxMjQ0Mjc3Niwia2VmdV9pZCI6MSwibmFtZSI6ImtlZnUyIiwicm9sZV9pZCI6MSwidHlwZSI6ImtlZnUifQ.dUS3A9tMOnxCaWYT0xIOGpUOycoboSDuS0EvRyupUHc",
+				token:"",
 				timer:null,
 				wsOpen:false,
 			}
 		},
 		// 页面显示
 		onShow() {
+			let _this=this;
+			let res = uni.getStorageSync('app');
+			console.log(res);
+			if(res){
+			  this.token=res.token;
+			}
 			this.checkAuth();
 			this.getOnlineUser();
 		},
@@ -113,6 +119,11 @@
 			        }
 			    }
 			    this.visitors=visitors;
+			},
+			//点击
+			chatVisitor(e,visitorId){
+				console.log(visitorId);
+			  uni.navigateTo({ url: '/pages/index/detail?visitor_id='+visitorId })
 			},
 			checkAuth(){
 				var _this=this;

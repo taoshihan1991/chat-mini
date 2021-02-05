@@ -1,13 +1,9 @@
 <template>
-    <view class="">
+    <view class="loginBox">
         <uni-forms :value="formData" ref="form">
-            <uni-forms-item label="用户名" name="name">
-                <uni-easyinput type="text" v-model="formData.name" placeholder="请输入姓名" />
-            </uni-forms-item>
-			<uni-forms-item label="密码" name="password">
-			    <uni-easyinput type="text" v-model="formData.password" placeholder="请输入密码" />
-			</uni-forms-item>
-            <button @click="submitForm">Submit</button>
+                <uni-easyinput class="loginInput" type="text" v-model="formData.username" placeholder="请输入用户名" />
+			    <uni-easyinput class="loginInput" type="password" v-model="formData.password" placeholder="请输入密码" />
+            <button class="loginInput" @click="submitForm" type="primary">登录</button>
         </uni-forms>
     </view>
 </template>
@@ -17,16 +13,47 @@
 		data() {
 			return {
 				formData:{
-					name:'',
+					username:'',
 					password:''
 				},
+				baseUrl:"https://gofly.sopans.com",
+				//baseUrl:"http://127.0.0.1:8081",
+				timer:null
 			}
 		},
 		methods: {
 			submitForm(form) {
-				// 手动提交表单
+				uni.showLoading({title: '验证中...'});
 				this.$refs.form.submit().then((res)=>{
-					console.log('表单返回得值：', res)
+					let _this=this;
+					uni.request({
+						url: _this.baseUrl+'/check',
+						method: 'POST',
+						header: {
+						  'Content-Type': 'application/x-www-form-urlencoded'
+						},
+						data:{
+						  username:this.formData.username,
+						  password:this.formData.password
+						},
+						success: function(res) {
+						},
+						complete: function(res) {
+						  uni.hideLoading();
+						  var code=res.data.code;
+						  if(code!=200){
+							uni.showModal({content: res.data.msg});
+						  }else{
+							uni.setStorageSync("app",{
+								kefu_name:_this.formData.username,
+								token: res.data.result.token,
+								ref_token:  res.data.result.ref_token,
+							  }
+							);
+							uni.navigateTo({ url: '/pages/index/index' });
+						  }
+						}
+					});
 				})
 			}
 		}
@@ -34,37 +61,10 @@
 </script>
 
 <style>
-	.uni-input-border,
-	.uni-textarea-border {
-		flex: 1;
-		font-size: 14px;
-		color: #666;
-		border: 1px #e5e5e5 solid;
-		border-radius: 5px;
-		/* #ifndef APP-NVUE */
-		box-sizing: border-box;
-		/* #endif */
-	}
-
-	.uni-input-border {
-		padding: 0 10px;
-		height: 35px;
-	}
-
-	.uni-textarea-border {
-		padding: 10px;
-		height: 80px;
-	}
-
-	.label-box {
-		margin-right: 10px;
-	}
-
-	.transform-scale {
-		transform: scale(0.7);
-	}
-
-	.button {
-		margin: 5px 10px;
-	}
+.loginBox{
+	padding: 20px;
+}
+.loginInput{
+	margin-bottom: 10px;
+}
 </style>

@@ -10,10 +10,17 @@
             "path" : "pages/index/login",
             "style" :                                                                                    
             {
+				"navigationBarTitleText": "GOFLY Live Chat"
+            }
+            
+        }
+        ,{
+            "path" : "pages/index/detail",
+            "style" :                                                                                    
+            {
                 "navigationBarTitleText": "",
                 "enablePullDownRefresh": false
             }
-            
         }
     ],
 	"globalStyle": {
