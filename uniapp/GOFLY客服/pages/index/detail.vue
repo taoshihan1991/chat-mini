@@ -31,6 +31,7 @@
 				area: "",
 				showArea: false,
 				scrollSize: 2,
+				faceTitles : ["[微笑]", "[嘻嘻]", "[哈哈]", "[可爱]", "[可怜]", "[挖鼻]", "[吃惊]", "[害羞]", "[挤眼]", "[闭嘴]", "[鄙视]", "[爱你]", "[泪]", "[偷笑]", "[亲亲]", "[生病]", "[太开心]", "[白眼]", "[右哼哼]", "[左哼哼]", "[嘘]", "[衰]", "[委屈]", "[吐]", "[哈欠]", "[抱抱]", "[怒]", "[疑问]", "[馋嘴]", "[拜拜]", "[思考]", "[汗]", "[困]", "[睡]", "[钱]", "[失望]", "[酷]", "[色]", "[哼]", "[鼓掌]", "[晕]", "[悲伤]", "[抓狂]", "[黑线]", "[阴险]", "[怒骂]", "[互粉]", "[心]", "[伤心]", "[猪头]", "[熊猫]", "[兔子]", "[ok]", "[耶]", "[good]", "[NO]", "[赞]", "[来]", "[弱]", "[草泥马]", "[神马]", "[囧]", "[浮云]", "[给力]", "[围观]", "[威武]", "[奥特曼]", "[礼物]", "[钟]", "[话筒]", "[蜡烛]", "[蛋糕]"],
 			}
 		},
 		// 页面显示
@@ -52,7 +53,12 @@
 				method: 'GET',
 				success: function(res) {
 					uni.hideLoading();
-					_this.messages = res.data.result;
+					var messages= res.data.result
+					for(var i in messages){
+						messages[i]['content']=_this.replaceContent(messages[i]['content'],_this.baseUrl);
+					}
+					console.log(messages);
+					_this.messages =messages;
 					if (_this.messages.length > _this.scrollSize) {
 						_this.pageScrollToBottom();
 					}
@@ -103,6 +109,8 @@
 				if (msg.id != this.visitor_id) {
 					return;
 				}
+				msg.mes_type = msg.is_kefu=="yes"? "kefu":"visitor";
+				msg.content=_this.replaceContent(msg.content,_this.baseUrl);
 				var messages = this.messages;
 				messages.push(msg);
 				this.messages = messages;
@@ -117,8 +125,51 @@
 						scrollTop: 9999999
 					})
 				});
-			
 			},
+			placeFace() {
+			    var faces=[];
+			    for(var i=0;i<this.faceTitles.length;i++){
+			        faces[this.faceTitles[i]]="/static/images/face/"+i+".gif";
+			    }
+			    return faces;
+			},
+			replaceContent (content,baseUrl) {// 转义聊天内容中的特殊字符
+			    if(typeof baseUrl=="undefined"){
+			        baseUrl="";
+			    }
+			    var faces=this.placeFace();
+			    var html = function (end) {
+			        return new RegExp('\\n*\\[' + (end || '') + '(pre|div|span|p|table|thead|th|tbody|tr|td|ul|li|ol|li|dl|dt|dd|h2|h3|h4|h5)([\\s\\S]*?)\\]\\n*', 'g');
+			    };
+			    content = (content || '').replace(/&(?!#?[a-zA-Z0-9]+;)/g, '&amp;')
+			        .replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/'/g, '&#39;').replace(/"/g, '&quot;') // XSS
+			        .replace(/face\[([^\s\[\]]+?)\]/g, function (face) {  // 转义表情
+			            var alt = face.replace(/^face/g, '');
+			            return '<img alt="' + alt + '" title="' + alt + '" src="'+baseUrl + faces[alt] + '">';
+			        })
+			        .replace(/img\[([^\s\[\]]+?)\]/g, function (face) {  // 转义图片
+			            var src = face.replace(/^img\[/g, '').replace(/\]/g, '');;
+			            return '<img @click="bigPic(\"'+baseUrl + src +'\",true)" src="'+ baseUrl + src + '" style="max-width: 100%"/></div>';
+			        })
+			        .replace(/file\[([^\s\[\]]+?)\]/g, function (face) {  // 转义图片
+			            var src = face.replace(/^file\[/g, '').replace(/\]/g, '');;
+			            return '<div class="folderBtn" onclick="window.open(\''+src+'\')"  style="font-size:25px;"/></div>';
+			        })
+			        .replace(/\[([^\s\[\]]+?)\]+link\[([^\s\[\]]+?)\]/g, function (face) {  // 转义超链接
+			            var text = face.replace(/link\[.*?\]/g, '').replace(/\[|\]/g, '');
+			            var src = face.replace(/^\[([^\s\[\]]+?)\]+link\[/g, '').replace(/\]/g, '');
+			            return '<a href="javascript:void(0)" onclick="window.open(\'' + src + '\')" />【'+text+'】</a>';
+			        })
+			        .replace(/\n/g, '<br>') // 转义换行
+			
+			    return content;
+			},
+			bigPic(src,isVisitor){
+			    if (isVisitor) {
+			        window.open(src);
+			        return;
+			    }
+			}
 		}
 	}
 </script>
