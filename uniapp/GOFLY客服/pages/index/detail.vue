@@ -52,14 +52,13 @@
 		},
 		// 页面显示
 		onLoad(options) {
-
 			var res = uni.getStorageSync('app');
-			console.log(res);
 			if (res) {
 				this.token = res.token;
 				this.kefu_name = res.kefu_name;
 				this.visitor_id = options.visitor_id
 			}
+			this.checkAuth();
 			var baseUrl = this.baseUrl;
 			uni.showLoading({
 				title: "加载中..."
@@ -84,6 +83,19 @@
 			});
 		},
 		methods: {
+			checkAuth(){
+				var _this=this;
+				uni.request({
+					url: _this.baseUrl+'/userinfo?token='+_this.token,
+					method: 'GET',
+					success: function(res) {
+						var code=res.data.code;
+						if(code!=200){
+						  uni.navigateTo({ url: '/pages/index/login' });
+						}
+					}
+				});
+			},
 			//用户实时上下线
 			onlineIntime() {
 				let _this = this;

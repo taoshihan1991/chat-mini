@@ -65,7 +65,14 @@
     "mp-toutiao" : {
         "usingComponents" : true
     },
-    "uniStatistics": {  
-        "enable": false
+    "uniStatistics" : {
+        "enable" : false
+    },
+    "h5" : {
+        "title" : "GOFLY客服",
+        "domain" : "https://gofly.sopans.com",
+        "router" : {
+            "base" : "./"
+        }
     }
 }
