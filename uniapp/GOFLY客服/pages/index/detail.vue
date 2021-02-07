@@ -13,6 +13,7 @@
 				<view class="clear"></view>
 			</view>
 			<view class="flyNotice" v-show="messages.length==0">暂无消息记录</view>
+			<view class="flyNoticeBar" v-show="noticeContent">{{noticeContent}}</view>
 		</view>
 		<view class="chatBoxSend">
 			<textarea class="chatArea" v-model="messageContent" v-on:keyup.enter.native="chatToUser" placeholder="请输入信息"></textarea>
@@ -37,7 +38,7 @@
 				sendDisabled: false,
 				token: "",
 				visitor_id: "",
-				visitor_name:"",
+				visitor_name: "",
 				kefu_name: "",
 				isDisabled: false,
 				area: "",
@@ -50,6 +51,7 @@
 					"[赞]", "[来]", "[弱]", "[草泥马]", "[神马]", "[囧]", "[浮云]", "[给力]", "[围观]", "[威武]", "[奥特曼]", "[礼物]", "[钟]", "[话筒]",
 					"[蜡烛]", "[蛋糕]"
 				],
+				noticeContent:"",
 			}
 		},
 		// 页面显示
@@ -74,17 +76,17 @@
 					success: function(res) {
 						var code = res.data.code;
 						if (code == 200) {
-							_this.visitor_name=res.data.result.name;
-							if(res.data.result.status==1){
+							_this.visitor_name = res.data.result.name;
+							if (res.data.result.status == 1) {
 								uni.setNavigationBarTitle({
-									title: "[在线]:"+_this.visitor_name
+									title: "[在线]:" + _this.visitor_name
 								});
-							}else{
+							} else {
 								uni.setNavigationBarTitle({
-									title: '[离线]:'+_this.visitor_name
+									title: '[离线]:' + _this.visitor_name
 								});
 							}
-							
+
 						}
 					}
 				});
@@ -156,37 +158,40 @@
 					switch (redata.type) {
 						case "message":
 							_this.recvMessage(redata.data);
-							
+
 							break;
 						case "inputing":
-							if(redata.data.from!=_this.visitor_id){
+							if (redata.data.from != _this.visitor_id) {
 								return;
 							}
-							if(redata.data.content==""){
+							if (redata.data.content == "") {
 								uni.setNavigationBarTitle({
-									title: "[在线]:"+_this.visitor_name
+									title: "[在线]:" + _this.visitor_name
 								});
-							}else{
+							} else {
 								uni.setNavigationBarTitle({
-									title: '[输入]:'+redata.data.content
+									title: '[输入]:' + redata.data.content
 								});
 							}
-							
+
 							break;
 						case "userOffline":
-							if(redata.data.uid!=_this.visitor_id){
+							_this.showNoticeBar(redata.data.name + "离线");
+							if (redata.data.uid != _this.visitor_id) {
 								return;
 							}
 							uni.setNavigationBarTitle({
-								title: "[离线]:"+_this.visitor_name
+								title: "[离线]:" + _this.visitor_name
 							});
 							break;
 						case "userOnline":
-							if(redata.data.uid!=_this.visitor_id){
+							//_this.showNotice(redata.data.username + "来了");
+							_this.showNoticeBar(redata.data.username + "来了");
+							if (redata.data.uid != _this.visitor_id) {
 								return;
 							}
 							uni.setNavigationBarTitle({
-								title: "[在线]:"+_this.visitor_name
+								title: "[在线]:" + _this.visitor_name
 							});
 							break;
 					}
@@ -206,8 +211,9 @@
 				this.messages = messages;
 				_this.pageScrollToBottom();
 				uni.setNavigationBarTitle({
-					title: "[在线]:"+_this.visitor_name
+					title: "[在线]:" + _this.visitor_name
 				});
+				this.showNotice(msg.name + ":" + msg.content);
 			},
 			pageScrollToBottom: function() {
 				this.$nextTick(() => {
@@ -272,13 +278,13 @@
 					});
 					return;
 				}
-				if(_this.isDisabled){
+				if (_this.isDisabled) {
 					return
 				}
 				uni.showLoading({
 					title: "发送中..."
 				});
-				_this.isDisabled=true;
+				_this.isDisabled = true;
 				uni.request({
 					url: _this.baseUrl + '/2/message',
 					method: 'POST',
@@ -309,6 +315,20 @@
 						}
 					}
 				});
+			},
+			showNotice(msg) {
+				// if (uni.getSystemInfoSync().platform == "android") {
+				// 	if (window.plus) {
+				// 		plus.push.createMessage(msg);
+				// 	}
+				// }
+			},
+			showNoticeBar(msg){
+				var _this=this;
+				_this.noticeContent=msg;
+				setTimeout(function(){
+					_this.noticeContent="";
+				},3000);
 			},
 		}
 	}
@@ -346,6 +366,10 @@
 		float: right;
 	}
 
+	.chatBox {
+		padding: 0 4px;
+	}
+
 	.chatBoxMe .chatContent {
 		float: right;
 		background-color: rgb(152, 225, 101);
@@ -380,7 +404,11 @@
 		position: relative;
 		border-radius: 5px;
 		display: inline-block;
-		margin-left: 6px;
+		margin-left: 4px;
+	}
+
+	.chatBoxMe .chatContent {
+		margin-right: 4px;
 	}
 
 	.chatTime {
@@ -425,7 +453,7 @@
 		width: 100%;
 		text-align: left;
 		position: relative;
-		padding-bottom: 70px;
+		padding-bottom: 75px;
 	}
 
 	.clear {

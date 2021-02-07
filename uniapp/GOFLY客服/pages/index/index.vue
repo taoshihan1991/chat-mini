@@ -5,6 +5,7 @@
 			 thumb-size="lg" clickable @click="chatVisitor($event,item.uid)"></uni-list-item>
 		</uni-list>
 		<view class="flyNotice" v-show="visitors.length==0">暂无在线访客</view>
+		<view class="flyNoticeBar" v-show="noticeContent">{{noticeContent}}</view>
 	</view>
 
 </template>
@@ -22,6 +23,7 @@
 				token: "",
 				timer: null,
 				wsOpen: false,
+				noticeContent:"",
 			}
 		},
 		// 页面显示
@@ -36,7 +38,7 @@
 			this.getOnlineUser();
 		},
 		onLoad() {
-			this.showNotice();
+			this.initPush();
 		},
 		methods: {
 			//用户实时上下线
@@ -110,6 +112,8 @@
 					visitors.unshift(retData);
 				}
 				this.visitors = visitors;
+				this.showNoticeBar(retData.username+"来了");
+				//this.showNotice(retData.username+"来了");
 			},
 			//处理当前在线用户列表
 			removeOfflineUser: function(retData) {
@@ -120,6 +124,7 @@
 					}
 				}
 				this.visitors = visitors;
+				this.showNoticeBar(retData.name+"离线");
 			},
 			//点击
 			chatVisitor(e, visitorId) {
@@ -135,12 +140,48 @@
 					}
 				}
 				this.visitors = visitors;
+				this.showNotice(msg.name+":"+ msg.content);
 			},
-			showNotice(){
-				if (uni.getSystemInfoSync().platform == "android") {
-				      console.log('准备调起常驻通知栏');
-					  plus.push.createMessage("您有一条新消息");
-				}
+			initPush(){
+				document.addEventListener('plusready', function(){  
+				    // 页面加载时触发  
+					if(window.plus){
+						var pinf = plus.push.getClientInfo();
+						var cid = pinf.clientid;//客户端标识 
+						 //监听系统通知栏消息点击事件
+						 plus.push.addEventListener('click', function(msg){  
+						     //处理点击消息的业务逻辑代码  
+						 }, false);  
+						 //监听接收透传消息事件  
+						 plus.push.addEventListener('receive', function(msg){  
+						     //处理透传消息的业务逻辑代码  
+							 var options = {cover:false};
+							 plus.push.createMessage(msg,"RemoteMSG",options);
+						 }, false);
+					}
+				}, false );
+			},
+			showNotice(msg){
+				// if (uni.getSystemInfoSync().platform == "android") {
+				// 	if(window.plus){
+				// 		var options = {cover:false};
+				// 		plus.push.createMessage(msg,"LocalMSG",options);
+				// 	}
+				// 	if(uni.vibrate){
+				// 		uni.vibrate({
+				// 		    success: function () {
+				// 		        console.log('success');
+				// 		    }
+				// 		});
+				// 	}
+				// }
+			},
+			showNoticeBar(msg){
+				var _this=this;
+				_this.noticeContent=msg;
+				setTimeout(function(){
+					_this.noticeContent="";
+				},3000);
 			},
 			checkAuth() {
 				var _this = this;
