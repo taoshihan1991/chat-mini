@@ -23,10 +23,17 @@
 		},
 		methods: {
 			submitForm(form) {
-				uni.showLoading({
-					title: '验证中...'
-				});
+				
 				this.$refs.form.submit().then((res) => {
+					if(this.formData.username==""||this.formData.username==""){
+						uni.showModal({
+							content: "请输入用户名或密码"
+						});
+						return;
+					}
+					uni.showLoading({
+						title: '验证中...'
+					});
 					let _this = this;
 					uni.request({
 						url: _this.baseUrl + '/check',

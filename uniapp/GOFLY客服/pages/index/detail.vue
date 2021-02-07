@@ -12,6 +12,7 @@
 				</view>
 				<view class="clear"></view>
 			</view>
+			<view class="flyNotice" v-show="messages.length==0">暂无消息记录</view>
 		</view>
 		<view class="chatBoxSend">
 			<textarea class="chatArea" v-model="messageContent" v-on:keyup.enter.native="chatToUser" placeholder="请输入信息"></textarea>
@@ -36,6 +37,7 @@
 				sendDisabled: false,
 				token: "",
 				visitor_id: "",
+				visitor_name:"",
 				kefu_name: "",
 				isDisabled: false,
 				area: "",
@@ -56,42 +58,72 @@
 			if (res) {
 				this.token = res.token;
 				this.kefu_name = res.kefu_name;
-				this.visitor_id = options.visitor_id
 			}
+			this.visitor_id = options.visitor_id;
 			this.checkAuth();
-			var baseUrl = this.baseUrl;
-			uni.showLoading({
-				title: "加载中..."
-			});
-			var _this = this;
-			uni.request({
-				url: baseUrl + '/2/messages?visitor_id=' + options.visitor_id,
-				method: 'GET',
-				success: function(res) {
-					uni.hideLoading();
-					var messages = res.data.result
-					for (var i in messages) {
-						messages[i]['content'] = _this.replaceContent(messages[i]['content'], _this.baseUrl);
-					}
-					console.log(messages);
-					_this.messages = messages;
-					setTimeout(function() {
-						_this.pageScrollToBottom();
-					}, 2000);
-					_this.onlineIntime();
-				}
-			});
+			this.getVisitor();
+			this.getMessages();
 		},
 		methods: {
-			checkAuth(){
-				var _this=this;
+			getVisitor() {
+				var baseUrl = this.baseUrl;
+				var _this = this;
 				uni.request({
-					url: _this.baseUrl+'/userinfo?token='+_this.token,
+					url: baseUrl + '/visitor?visitorId=' + this.visitor_id + '&token=' + _this.token,
 					method: 'GET',
 					success: function(res) {
-						var code=res.data.code;
-						if(code!=200){
-						  uni.navigateTo({ url: '/pages/index/login' });
+						var code = res.data.code;
+						if (code == 200) {
+							_this.visitor_name=res.data.result.name;
+							if(res.data.result.status==1){
+								uni.setNavigationBarTitle({
+									title: "[在线]:"+_this.visitor_name
+								});
+							}else{
+								uni.setNavigationBarTitle({
+									title: '[离线]:'+_this.visitor_name
+								});
+							}
+							
+						}
+					}
+				});
+			},
+			getMessages() {
+				uni.showLoading({
+					title: "加载中..."
+				});
+				var baseUrl = this.baseUrl;
+				var _this = this;
+				uni.request({
+					url: baseUrl + '/2/messages?visitor_id=' + this.visitor_id,
+					method: 'GET',
+					success: function(res) {
+						uni.hideLoading();
+						var messages = res.data.result
+						for (var i in messages) {
+							messages[i]['content'] = _this.replaceContent(messages[i]['content'], _this.baseUrl);
+						}
+						console.log(messages);
+						_this.messages = messages;
+						setTimeout(function() {
+							_this.pageScrollToBottom();
+						}, 2000);
+						_this.onlineIntime();
+					}
+				});
+			},
+			checkAuth() {
+				var _this = this;
+				uni.request({
+					url: _this.baseUrl + '/userinfo?token=' + _this.token,
+					method: 'GET',
+					success: function(res) {
+						var code = res.data.code;
+						if (code != 200) {
+							uni.navigateTo({
+								url: '/pages/index/login'
+							});
 						}
 					}
 				});
@@ -124,11 +156,40 @@
 					switch (redata.type) {
 						case "message":
 							_this.recvMessage(redata.data);
+							
 							break;
-						case "notice":
+						case "inputing":
+							if(redata.data.from!=_this.visitor_id){
+								return;
+							}
+							if(redata.data.content==""){
+								uni.setNavigationBarTitle({
+									title: "[在线]:"+_this.visitor_name
+								});
+							}else{
+								uni.setNavigationBarTitle({
+									title: '[输入]:'+redata.data.content
+								});
+							}
+							
+							break;
+						case "userOffline":
+							if(redata.data.uid!=_this.visitor_id){
+								return;
+							}
+							uni.setNavigationBarTitle({
+								title: "[离线]:"+_this.visitor_name
+							});
+							break;
+						case "userOnline":
+							if(redata.data.uid!=_this.visitor_id){
+								return;
+							}
+							uni.setNavigationBarTitle({
+								title: "[在线]:"+_this.visitor_name
+							});
 							break;
 					}
-					//console.log('收到服务器内容 ：' + res.data)
 				});
 
 
@@ -144,6 +205,9 @@
 				messages.push(msg);
 				this.messages = messages;
 				_this.pageScrollToBottom();
+				uni.setNavigationBarTitle({
+					title: "[在线]:"+_this.visitor_name
+				});
 			},
 			pageScrollToBottom: function() {
 				this.$nextTick(() => {
@@ -208,9 +272,13 @@
 					});
 					return;
 				}
+				if(_this.isDisabled){
+					return
+				}
 				uni.showLoading({
 					title: "发送中..."
-				})
+				});
+				_this.isDisabled=true;
 				uni.request({
 					url: _this.baseUrl + '/2/message',
 					method: 'POST',
