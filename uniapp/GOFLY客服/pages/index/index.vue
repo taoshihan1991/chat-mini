@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<uni-list>
-			<uni-list-item v-for="item in visitors" key="item.uid" :title="item.username" :note="item.last_message" :thumb="baseUrl+item.avator"
+			<uni-list-item v-for="item in visitors" :key="item.uid" :title="item.username" :note="item.last_message" :thumb="baseUrl+item.avator"
 			 thumb-size="lg" clickable @click="chatVisitor($event,item.uid)"></uni-list-item>
 		</uni-list>
 		<view class="flyNotice" v-show="visitors.length==0">暂无在线访客</view>

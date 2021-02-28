@@ -59,7 +59,7 @@
 									token: res.data.result.token,
 									ref_token: res.data.result.ref_token,
 								});
-								uni.navigateTo({
+								uni.switchTab({
 									url: '/pages/index/index'
 								});
 							}

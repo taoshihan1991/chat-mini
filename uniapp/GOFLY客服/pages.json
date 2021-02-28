@@ -13,6 +13,15 @@
 				"navigationBarTitleText": "GOFLY Live Chat"
             }
             
+        }	    
+		,{
+            "path" : "pages/index/history",
+            "style" :                                                                                    
+            {
+				"navigationBarTitleText": "GOFLY Live Chat",
+				"enablePullDownRefresh": true
+            }
+            
         }
         ,{
             "path" : "pages/index/detail",
@@ -28,5 +37,18 @@
 		"navigationBarTitleText": "GOFLY Live Chat",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
-	}
+	},
+	"tabBar": {
+			"selectedColor":"#4687f2",
+			"list": [
+				{
+					"pagePath":"pages/index/index",
+					"text":"对话"
+				},
+				{
+					"pagePath":"pages/index/history",
+					"text":"历史"
+				}
+			]	
+		 }
 }
