@@ -15,8 +15,8 @@
 		data() {
 			return {
 				title: 'Hello',
-				baseUrl: "https://gofly.sopans.com",
-				wsBaseUrl: "wss://gofly.sopans.com/ws_kefu",
+				baseUrl: getApp().globalData.baseUrl,
+				wsBaseUrl: getApp().globalData.wsBaseUrl,
 				// baseUrl:"http://127.0.0.1:8081",
 				// wsBaseUrl:"ws://127.0.0.1:8081/ws_kefu",
 				visitors: [],

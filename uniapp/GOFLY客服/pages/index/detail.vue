@@ -29,8 +29,8 @@
 	export default {
 		data() {
 			return {
-				baseUrl: "https://gofly.sopans.com",
-				wsBaseUrl: "wss://gofly.sopans.com/ws_kefu",
+				baseUrl: getApp().globalData.baseUrl,
+				wsBaseUrl: getApp().globalData.wsBaseUrl,
 				// baseUrl:"http://127.0.0.1:8081",
 				// wsBaseUrl:"ws://127.0.0.1:8081/ws_kefu",
 				messages: [],
@@ -77,15 +77,9 @@
 						var code = res.data.code;
 						if (code == 200) {
 							_this.visitor_name = res.data.result.name;
-							if (res.data.result.status == 1) {
-								uni.setNavigationBarTitle({
-									title: "[在线]:" + _this.visitor_name
-								});
-							} else {
-								uni.setNavigationBarTitle({
-									title: '[离线]:' + _this.visitor_name
-								});
-							}
+							uni.setNavigationBarTitle({
+								title: _this.visitor_name
+							});
 
 						}
 					}
@@ -106,12 +100,14 @@
 						for (var i in messages) {
 							messages[i]['content'] = _this.replaceContent(messages[i]['content'], _this.baseUrl);
 						}
-						console.log(messages);
+						_this.onlineIntime();
+						if(messages.length<=0){
+							return;
+						}
 						_this.messages = messages;
 						setTimeout(function() {
 							_this.pageScrollToBottom();
-						}, 2000);
-						_this.onlineIntime();
+						}, 1000);
 					}
 				});
 			},

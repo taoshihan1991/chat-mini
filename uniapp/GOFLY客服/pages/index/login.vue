@@ -16,8 +16,7 @@
 					username: '',
 					password: ''
 				},
-				baseUrl: "https://gofly.sopans.com",
-				//baseUrl:"http://127.0.0.1:8081",
+				baseUrl: getApp().globalData.baseUrl,
 				timer: null
 			}
 		},

@@ -5,8 +5,13 @@
 		onShow: function() {
 		},
 		onHide: function() {
+		},
+		globalData: {
+			"baseUrl":"https://jd.sopans.com",
+			"wsBaseUrl":"wss://jd.sopans.com/ws_kefu"
 		}
 	}
+ 
 </script>
 
 <style>
