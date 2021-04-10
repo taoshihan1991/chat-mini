@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<uni-list>
-			<uni-list-item v-for="item in visitors" :key="item.id" :note="item.created_at+'\n'+item.updated_at" :title="item.id+'|'+item.name"  :thumb="baseUrl+item.avator"
+			<uni-list-item v-for="item in visitors" :key="item.id" :note="'最近:'+formatTime(item.updated_at)+'\n首访:'+formatTime(item.created_at)" :title="item.id+'|'+item.name"  :thumb="baseUrl+item.avator"
 			 thumb-size="lg" clickable @click="chatVisitor($event,item.visitor_id)"></uni-list-item>
 		</uni-list>
 		<view class="flyNotice" v-show="visitors.length==0">暂无数据</view>
@@ -42,7 +42,7 @@
 		},
 		onPullDownRefresh(){
 			console.log('refresh');
-			this.getOnlineUser(this.page)
+			this.getNewOnlineUser(1)
 			setTimeout(function () {
 				uni.stopPullDownRefresh();
 			}, 1000);
@@ -111,7 +111,21 @@
 					fail: function(res) {}
 				});
 			},
-			
+			getNewOnlineUser(page) {
+				let _this = this;
+				var baseUrl = this.baseUrl;
+				uni.request({
+					url: baseUrl + '/visitors?page='+page+'&pagesize=14&token=' + _this.token,
+					method: 'GET',
+					success: function(res) {
+						if (!res.data.result.list) {
+							return;
+						}
+						var list=res.data.result.list
+						_this.visitors=list;
+					},
+				});
+			},
 			//点击
 			chatVisitor(e, visitorId) {
 				uni.navigateTo({
@@ -157,6 +171,26 @@
 				}
 				return result;
 
+			},
+			formatTime(time, fmt) {
+				if (time == null) {
+					return;
+				}
+				var fmt = fmt ? fmt : 'yyyy-MM-dd hh:mm:ss';
+				var time = new Date(time);
+				var z = {
+						M: time.getMonth() + 1, 
+						d: time.getDate(), 
+						h: time.getHours(),
+						m: time.getMinutes(),
+						s: time.getSeconds()
+					};
+				fmt = fmt.replace(/(M+|d+|h+|m+|s+)/g, function(v) {
+						return ((v.length > 1 ? "0" : "") + eval('z.' + v.slice(-1))).slice(-2);
+					});
+				return fmt.replace(/(y+)/g, function(v) {
+						return time.getFullYear().toString().slice(-v.length);
+					});
 			}
 		}
 	}

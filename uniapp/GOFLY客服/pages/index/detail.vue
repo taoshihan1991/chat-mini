@@ -16,9 +16,12 @@
 			<view class="flyNoticeBar" v-show="noticeContent">{{noticeContent}}</view>
 		</view>
 		<view class="chatBoxSend">
+			<view class="chatBoxSendIcons">
+				<uni-icons v-on:click="uploadImage" type="image" size="30" color="#a5a5a5"></uni-icons>
+			</view>
 			<textarea class="chatArea" v-model="messageContent" v-on:keyup.enter.native="chatToUser" placeholder="请输入信息"></textarea>
 			<view class="btnArea">
-				<button v-on:click="chatToUser" type="primary" size="mini">发送</button>
+				<button v-on:click="chatToUser" type="primary">发送</button>
 			</view>
 		</view>
 	</view>
@@ -206,9 +209,6 @@
 				messages.push(msg);
 				this.messages = messages;
 				_this.pageScrollToBottom();
-				uni.setNavigationBarTitle({
-					title: "[在线]:" + _this.visitor_name
-				});
 				this.showNotice(msg.name + ":" + msg.content);
 			},
 			pageScrollToBottom: function() {
@@ -326,6 +326,25 @@
 					_this.noticeContent="";
 				},3000);
 			},
+			uploadImage(){
+				var _this=this;
+				uni.chooseImage({
+				    success: (chooseImageRes) => {
+				        const tempFilePaths = chooseImageRes.tempFilePaths;
+				        uni.uploadFile({
+				            url:  _this.baseUrl + '/uploadimg?token='+ _this.token,
+				            filePath: tempFilePaths[0],
+				            name: 'imgfile',
+				            success: (res) => {
+								console.log(res);
+								var data=JSON.parse(res.data)
+								_this.messageContent+='img[/' + data.result.path + ']';
+								_this.chatToUser();
+				            }
+				        });
+				    }
+				});
+			},
 		}
 	}
 </script>
@@ -416,21 +435,30 @@
 
 	.chatArea {
 		float: left;
-		width: 70%;
-		height: 50px;
-		margin: 4px 0 0 4px;
-		border-color: #C0C4CC;
+		width: calc(100% - 80px);
+		height: 38px;
+		line-height: 38px;
+		border:1px solid #e2e2e2;
 		padding: 1px 5px;
 		background: #fff;
 		border-radius: 4px;
+		margin-left: 5px;
 	}
 
 	.btnArea {
-		width: 20%;
 		float: right;
-		margin-top: 15px;
+		margin-right: 5px;
 	}
-
+	.btnArea uni-button{
+		width: 55px;
+		height: 40px;
+		line-height: 40px;
+		text-align: center;
+		font-size: 13px;
+	}
+	.chatBoxSendIcons{
+		padding:0px 5px;
+	}
 	.visitorFaceBox {
 		position: absolute;
 		bottom: 70px;
@@ -442,7 +470,6 @@
 		bottom: 0px;
 		left: 0px;
 		width: 100%;
-		height: 70px;
 	}
 
 	.chatContext {

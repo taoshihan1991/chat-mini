@@ -31,6 +31,14 @@
                 "enablePullDownRefresh": false
             }
         }
+		,{
+		    "path" : "pages/index/my",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "GOFLY Live Chat",
+		        "enablePullDownRefresh": false
+		    }
+		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -43,11 +51,15 @@
 			"list": [
 				{
 					"pagePath":"pages/index/index",
-					"text":"对话"
+					"text":"会话"
 				},
 				{
 					"pagePath":"pages/index/history",
-					"text":"历史"
+					"text":"访客"
+				},
+				{
+					"pagePath":"pages/index/my",
+					"text":"我的"
 				}
 			]	
 		 }
