@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<uni-list>
-			<uni-list-item v-for="item in visitors" :key="item.id" :note="'最近:'+formatTime(item.updated_at)+'\n首访:'+formatTime(item.created_at)" :title="item.id+'|'+item.name"  :thumb="baseUrl+item.avator"
+			<uni-list-item v-for="item in visitors" :key="item.id" :note="showLastMessage(item.last_message)+'\n'+formatTime(item.updated_at)" :title="item.id+'|'+item.username"  :thumb="baseUrl+item.avator"
 			 thumb-size="lg" clickable @click="chatVisitor($event,item.visitor_id)"></uni-list-item>
 		</uni-list>
 		<view class="flyNotice" v-show="visitors.length==0">暂无数据</view>
@@ -171,6 +171,12 @@
 				}
 				return result;
 
+			},
+			showLastMessage(mes){
+				if(mes==""){
+					return "无消息";
+				}
+				return mes
 			},
 			formatTime(time, fmt) {
 				if (time == null) {

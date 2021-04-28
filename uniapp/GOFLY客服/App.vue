@@ -8,7 +8,9 @@
 		},
 		globalData: {
 			"baseUrl":"https://jd.sopans.com",
-			"wsBaseUrl":"wss://jd.sopans.com/ws_kefu"
+			"wsBaseUrl":"wss://jd.sopans.com/ws_kefu",
+			// "baseUrl":"http://127.0.0.1:8081",
+			// "wsBaseUrl":"ws://127.0.0.1:8081/ws_kefu"
 		}
 	}
  
@@ -16,6 +18,9 @@
 
 <style>
 	/*每个页面公共css */
+	a{
+		text-decoration: none;
+	}
 	.flyNotice{
 		text-align: center;
 		margin-top: 100px;
@@ -31,6 +36,6 @@
 		top: 0px;
 		left: 0px;
 		right: 0px;
-		z-index: 999;
+		z-index: 999;;
 	}
 </style>
