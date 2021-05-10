@@ -137,10 +137,8 @@
 					url: this.wsBaseUrl + "?token=" + this.token,
 				});
 				uni.onSocketClose((res) => {
-					console.log("WebSocket 连接断开");
 				});
 				uni.onSocketOpen((res) => {
-					console.log("WebSocket 连接已打开");
 					let _this = this;
 					let mes = {}
 					mes.type = "ping";
@@ -383,7 +381,9 @@
 	.chatBox {
 		padding: 0 4px;
 	}
-
+	.chatContent a{
+		text-decoration: none;
+	}
 	.chatBoxMe .chatContent {
 		float: right;
 		background-color: rgb(152, 225, 101);
