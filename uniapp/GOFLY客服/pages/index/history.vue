@@ -36,7 +36,7 @@
 				this.token = res.token;
 			}
 			this.checkAuth();
-			this.getOnlineUser(this.page);
+			this.getNewOnlineUser(1);
 		},
 		onLoad() {
 		},

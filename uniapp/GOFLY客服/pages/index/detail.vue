@@ -1,5 +1,6 @@
 <template>
 	<view class="chatContext">
+		<view class="flyNotice" v-show="messages.length==0">暂无消息记录</view>
 		<view class="chatBox">
 			<view v-for="v in messages" v-bind:class="{'chatBoxMe': v.mes_type=='kefu'}">
 				<view class="chatTime" v-bind:class="{'chatTimeHide': v.show_time==false}">{{v.time}}</view>
@@ -12,8 +13,6 @@
 				</view>
 				<view class="clear"></view>
 			</view>
-			<view class="flyNotice" v-show="messages.length==0">暂无消息记录</view>
-			<view class="flyNoticeBar" v-show="noticeContent">{{noticeContent}}</view>
 		</view>
 		<view class="chatBoxSend">
 			<view class="chatBoxSendIcons">
@@ -476,7 +475,7 @@
 		width: 100%;
 		text-align: left;
 		position: relative;
-		padding-bottom: 75px;
+		padding-bottom: 80px;
 	}
 
 	.clear {

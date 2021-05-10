@@ -18,7 +18,7 @@
 	/*每个页面公共css */
 	.flyNotice{
 		text-align: center;
-		margin-top: 100px;
+		padding-top: 80px;
 		color: #808080;
 	}
 	.flyNoticeBar{
